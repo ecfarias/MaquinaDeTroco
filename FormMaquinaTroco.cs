@@ -4,7 +4,6 @@ namespace MaquinaDeTroco {
 
     /// <summary>
     /// Parte-se do princípio que não há a terceira casa decimal
-    /// Problema conhecido: Se eu tiver no caixa 3 moedas de 10 centavos e uma de 25 e pedir troco pra 30 ele não consegue chegar no resultado
     /// </summary>
     public partial class FormMaquinaTroco : Form {
         private decimal ValorEmCaixa {
@@ -24,16 +23,23 @@ namespace MaquinaDeTroco {
             btn025.Text = (0.25m).ToString("C2");
             btn050.Text = (0.5m).ToString("C2");
             btn100.Text = (1m).ToString("C2");
-            /*Preload*
-            AbastecerMoeda(0.01m, 100);
-            AbastecerMoeda(0.05m, 100);
-            AbastecerMoeda(0.10m, 100);
-            AbastecerMoeda(0.25m, 100);
-            AbastecerMoeda(0.50m, 100);
-            AbastecerMoeda(1.00m, 100);
-            txtValorTroco.Text = "R$ 7,77";
-            AtualizaSaldo();
-            *********/
+
+            btn001Sangria.Text = (0.01m).ToString("C2");
+            btn005Sangria.Text = (0.05m).ToString("C2");
+            btn010Sangria.Text = (0.1m).ToString("C2");
+            btn025Sangria.Text = (0.25m).ToString("C2");
+            btn050Sangria.Text = (0.5m).ToString("C2");
+            btn100Sangria.Text = (1m).ToString("C2");
+            // Preload 
+            //AbastecerMoeda(0.01m, 100);
+            //AbastecerMoeda(0.05m, 100);
+            //AbastecerMoeda(0.10m, 100);
+            //AbastecerMoeda(0.25m, 100);
+            //AbastecerMoeda(0.50m, 100);
+            //AbastecerMoeda(1.00m, 100);
+            //txtValorTroco.Text = "R$ 7,77";
+            //AtualizaSaldo();
+            //*********/
         }
 
         private void btnMoeda_Click(object sender, EventArgs e) {
@@ -205,12 +211,14 @@ namespace MaquinaDeTroco {
             if (Moedas == null) return null;
             //Primeiro Calcula todas as combinações possíveis de moedas
             var Solucoes = new List<List<Moeda>>();
-            var combinacoes = getCombinacoes(Moedas).ToList();
+            var combinacoes = getCombinacoes(Moedas.Where(x => x.Quantidade > 0)).ToList();
+            //Dentre as combinações, quais resolvem o troco?
             foreach (var combinacao in combinacoes) {
                 var solucao = BuscaSolucaoDaCombinacao(valorTroco, combinacao);
                 if (solucao == null) continue;
                 Solucoes.Add(solucao.ToList());
             }
+            //Das soluções, qual delas usam menos moedas
             int i = int.MaxValue;
             int index = -1;
             foreach (var solucao in Solucoes) {
